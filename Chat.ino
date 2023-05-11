@@ -37,9 +37,9 @@ void chat(){
   webServer.client().stop();
 }
 
-void send(){
+void sender(){
   if(kick.indexOf(" "+webServer.arg("name")+" ") > -1){
-    webServer.send(302, "text/html", String(F("<!DOCTYPE html> <html> <head> <title>Chatting.com</title> </head> <body> <h1>You have been kicked BOI!</h1> <script>setInterval(window.location.reload(), 3000);</script></body> </html>")));
+    webServer.send(302, "text/html", String(F("<!DOCTYPE html> <html> <head> <title>Chatting.com</title> </head> <body> <h1>You have been kicked</h1> <script>setInterval(window.location.reload(), 3000);</script></body> </html>")));
   }else{
     messages += webServer.arg("name")+": "+webServer.arg("message")+"<br>";
     webServer.send(302, "text/html", String(F("<!DOCTYPE html> <html> <head> <title>Sending...</title> </head> <body> <h1>Sending...</h1> <script> let params = new URL(document.location).searchParams; setTimeout(function(){window.location = '/chat?name='+params.get('name');}, 1000); </script> </body> </html>")));
@@ -63,7 +63,7 @@ void setup() {
   dnsServer.start(DNS_PORT, "*", apIP);
   webServer.onNotFound(chatstart);
   webServer.on("/chat", chat);
-  webServer.on("/send", send);
+  webServer.on("/send", sender);
   webServer.on("/api", messageupdate);
   webServer.begin();
   Serial.begin(115200);
