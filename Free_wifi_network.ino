@@ -1,32 +1,48 @@
 #include <ESP8266WiFi.h>
-#include <WiFiClient.h>
-#include <WiFiServer.h>
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
 
-#define PORT 9000
-
-WiFiClient client1;
-WiFiServer server(PORT);
-IPAddress  apIP(10, 10, 10, 10);
+const byte DNS_PORT = 53;
+IPAddress apIP(192, 168, 1, 1);
+DNSServer dnsServer;
+ESP8266WebServer webServer(80);
 
 const char *ssid = "Free Wifi Network";
 const char *pass = "password";
 const char chan = 3;
 
+const char *html = R"===(
+<!DOCTYPE html>
+<html>
+<body>
+<p>Hello</p>
+</body>
+</html>
+)===";
+
+void defaultPage() {
+  webServer.send(200, "text/html", html);
+}
+
 void setup() {
    Serial.begin(115200);
    delay(500);
-   WiFi.mode(WIFI_AP_STA);
+   pinMode(LED_BUILTIN, OUTPUT);
+   WiFi.mode(WIFI_AP);
    WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-   WiFi.softAP(ssid, pass, chan);
-   Serial.println("");
-   Serial.print("Set up AP: ");
-   Serial.println(ssid);
-   IPAddress myIP = WiFi.softAPIP();
-   Serial.print("Server IP address: ");
-   Serial.println(myIP);
-   delay(200);
-   server.begin();
+   WiFi.softAP(ssid, pass);
+   dnsServer.start(DNS_PORT, "*", apIP);
+   webServer.onNotFound(defaultPage);
+   webServer.begin();
 }
 
 void loop() {
+  if (WiFi.softAPgetStationNum() == 0)
+  {
+    delay(100);
+  } else {
+    delay(100);
+    dnsServer.processNextRequest();
+    webServer.handleClient();
+  }
 }
