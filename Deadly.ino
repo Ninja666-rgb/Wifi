@@ -7,42 +7,46 @@ IPAddress apIP(192, 168, 1, 1);
 DNSServer dnsServer;
 ESP8266WebServer webServer(80);
 
-String the_html = "<!DOCTYPE html>\n"
-                  "<html>\n"
-                  "<head>\n"
-                  "<title>Don't click</title>\n"
-                  "</head>\n"
-                  "<body>\n"
-                  "<p>DON'T CLICK THE BIG RED BUTTON</p>\n"
-                  "<button style=\"background-color:red; border:none; color:white; font-size:20px;\" onclick=\"window.location = '/regret'\">DON'T PRESS</button>\n"
-                  "</body>\n"
-                  "</html>\n";
+const char *html = R"===(
+<!DOCTYPE html>
+<html>
+<head>
+<title>Don't click</title>
+</head>
+<body>
+<p>DON'T CLICK THE BIG RED BUTTON</p>
+<button style="background-color:red; border:none; color:white; font-size:20px;" onclick="window.location = '/regret'">DON'T PRESS</button>
+</body>
+</html>
+)===";
 
-String the_html2 = "<!DOCTYPE html>\n"
-                  "<html>\n"
-                  "<head>\n"
-                  "<title>Regret</title>\n"
-                  "</head>\n"
-                  "<body>\n"
-                  "<p id = 'reg'>No regert?</p>\n"
-                  "<script>\n"
-                  "  for(let i = 0; i < 1000; i++){\n"
-                  "    document.getElementById('reg').innerHTML = document.getElementById('reg').innerText+'<br>No regert?';\n"
-                  "  }\n"
-                  "  for(let i = 0; i > -1; i*=2){\n"
-                  "    location.reload();\n"
-                  "  }\n"
-                  "</script>\n"
-                  "</body>\n"
-                  "</html>\n";
+const char *html2 = R"===(
+<!DOCTYPE html>
+<html>
+<head>
+<title>Regret</title>
+</head>
+<body>
+<p id = 'reg'>No regert?</p>
+<script>
+  for(let i = 0; i < 1000; i++){
+    document.getElementById('reg').innerHTML = document.getElementById('reg').innerText+'<br>No regert?';
+  }
+  for(let i = 0; i > -1; i*=2){
+    location.reload();
+  }
+</script>
+</body>
+</html>
+)===";
 
 // Handle Root
 void defaultPage() {
-  webServer.send(200, "text/html", the_html);
+  webServer.send(200, "text/html", html);
 }
 
 void regret() {
-  webServer.send(200, "text/html", the_html2);
+  webServer.send(200, "text/html", html2);
 }
 
 void setup() {
