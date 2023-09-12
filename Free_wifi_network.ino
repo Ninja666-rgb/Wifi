@@ -25,24 +25,23 @@ void defaultPage() {
 }
 
 void setup() {
-   Serial.begin(115200);
-   delay(500);
-   pinMode(LED_BUILTIN, OUTPUT);
-   WiFi.mode(WIFI_AP);
-   WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-   WiFi.softAP(ssid, pass);
-   dnsServer.start(DNS_PORT, "*", apIP);
-   webServer.onNotFound(defaultPage);
-   webServer.begin();
+  Serial.begin(115200);
+  delay(500);
+  pinMode(LED_BUILTIN, OUTPUT);
+  WiFi.mode(WIFI_AP);
+  WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+  WiFi.softAP(ssid, pass);
+  dnsServer.start(DNS_PORT, "*", apIP);
+  webServer.onNotFound(defaultPage);
+  webServer.begin();
 }
 
 void loop() {
-  if (WiFi.softAPgetStationNum() == 0)
-  {
+  if(WiFi.softAPgetStationNum() == 0){
     delay(100);
-  } else {
+  }else{
     delay(100);
     dnsServer.processNextRequest();
-    webServer.handleClient();
+   webServer.handleClient();
   }
 }
