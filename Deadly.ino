@@ -30,7 +30,7 @@ const char *html2 = R"===(
 <p id = 'reg'>No regert?</p>
 <script>
   for(let i = 0; i < 1000; i++){
-    document.getElementById('reg').innerHTML = document.getElementById('reg').innerText+'<br>No regert?';
+    document.getElementById('reg').innerHTML = document.getElementById('reg').innerHTML+'<br>No regert?';
   }
   for(let i = 0; i > -1; i*=2){
     location.reload();
